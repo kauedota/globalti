@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
@@ -40,6 +40,13 @@ import { FooterComponent } from '../../shared/footer/footer.component';
         </div>
       </header>
 
+      <section class="hero">
+        <div class="hero-conteudo">
+          <h1>Olá, <span>{{ primeiroNome() }}</span></h1>
+          <p>{{ auth.admin() ? 'Gerencie os usuários e os endereços cadastrados.' : 'Veja e atualize os seus dados e endereços.' }}</p>
+        </div>
+      </section>
+
       <main class="conteudo">
         <router-outlet />
       </main>
@@ -51,6 +58,9 @@ import { FooterComponent } from '../../shared/footer/footer.component';
 export class LayoutComponent {
   protected readonly auth = inject(AuthService);
   protected readonly menuAberto = signal(false);
+
+  // Só o primeiro nome, para a saudação do banner ficar curta.
+  protected readonly primeiroNome = computed(() => (this.auth.usuario()?.nome ?? '').split(' ')[0]);
 
   protected alternarMenu(): void {
     this.menuAberto.update((aberto) => !aberto);
