@@ -1,0 +1,9 @@
+# Perfil usado só nos testes. O banco vem do Testcontainers (@ServiceConnection).
+spring:
+  datasource:
+    password: senha-de-teste
+
+app:
+  jwt:
+    secret: segredo-somente-para-testes-com-mais-de-32-caracteres
+    expiration-minutes: 5

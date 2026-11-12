@@ -17,8 +17,8 @@ CREATE TABLE addresses (
     complemento VARCHAR(100),
     bairro      VARCHAR(100) NOT NULL,
     cidade      VARCHAR(100) NOT NULL,
-    estado      CHAR(2)      NOT NULL,
-    cep         CHAR(8)      NOT NULL,
+    estado      VARCHAR(2)   NOT NULL,
+    cep         VARCHAR(8)   NOT NULL,
     user_id     BIGINT       NOT NULL,
     CONSTRAINT fk_addresses_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
