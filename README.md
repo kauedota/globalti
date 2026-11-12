@@ -23,6 +23,43 @@ ViaCEP, mais um frontend SPA em Angular que consome a API.
 | Testes | JUnit 5, Mockito, Spring Boot Test, Testcontainers (PostgreSQL real) |
 | Frontend | Angular 22 (componentes standalone, formulários reativos, signals), CSS próprio |
 
+## Telas
+
+### Login e registro
+
+| Login | Registro com validação por campo |
+|-------|----------------------------------|
+| ![Tela de login](docs/prints/01-login.png) | ![Registro com erros de validação](docs/prints/02-registro-validacao.png) |
+
+### Dashboard do administrador
+
+O ADMIN vê todos os usuários (paginados e ordenáveis por nome, email e data de criação). Ao clicar em um usuário,
+os endereços dele aparecem logo abaixo.
+
+![Dashboard do administrador](docs/prints/03-dashboard-admin.png)
+
+### Cadastro de endereço com CEP e confirmação de exclusão
+
+Ao digitar o CEP, a API consulta o ViaCEP e preenche logradouro, bairro, cidade e estado.
+
+| Formulário de endereço | Confirmação antes de excluir |
+|------------------------|------------------------------|
+| ![Formulário de endereço com CEP preenchido](docs/prints/04-form-endereco-cep.png) | ![Confirmação de exclusão](docs/prints/05-confirmar-exclusao.png) |
+
+### Usuário comum e toast de alerta
+
+O USER vê só o próprio perfil e os próprios endereços. Avisos (como email já cadastrado) aparecem em toasts.
+
+| Dashboard do usuário | Toast de alerta |
+|----------------------|-----------------|
+| ![Dashboard do usuário comum](docs/prints/07-dashboard-usuario.png) | ![Toast de alerta](docs/prints/06-toast-alerta.png) |
+
+### Responsivo
+
+| Dashboard no celular | Menu no celular |
+|----------------------|-----------------|
+| ![Dashboard no celular](docs/prints/08-mobile-dashboard.png) | ![Menu no celular](docs/prints/09-mobile-menu.png) |
+
 ## Estrutura
 
 ```
