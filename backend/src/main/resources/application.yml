@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: prova-fullstack
+  datasource:
+    url: jdbc:postgresql://localhost:${DB_PORT:5432}/${DB_NAME:prova}
+    username: ${DB_USER:prova}
+    password: ${DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # O banco é criado pelo Flyway; o Hibernate só confere se bate com as entidades.
+      ddl-auto: validate
+
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+
+app:
+  jwt:
+    # Sem valor padrão de propósito: a API não sobe sem o segredo definido.
+    secret: ${JWT_SECRET}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+  viacep:
+    base-url: https://viacep.com.br/ws
+    connect-timeout-ms: 3000
+    read-timeout-ms: 5000
+  admin:
+    email: ${ADMIN_EMAIL:admin@globalti.com.br}
+    password: ${ADMIN_PASSWORD:Admin@123}
+    nome: Administrador
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

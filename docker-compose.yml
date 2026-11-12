@@ -1,0 +1,21 @@
+# Sobe só o PostgreSQL. A API e o front rodam na máquina (veja o README).
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: prova-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-prova}
+      POSTGRES_USER: ${DB_USER:-prova}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no arquivo .env}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - prova-dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-prova} -d ${DB_NAME:-prova}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  prova-dados:
