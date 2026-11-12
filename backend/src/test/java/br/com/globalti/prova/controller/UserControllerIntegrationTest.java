@@ -64,6 +64,16 @@ class UserControllerIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
+    void paginaTemTamanhoPadraoDe10ELimiteDe100() throws Exception {
+        String admin = bearer(EMAIL_ADMIN);
+
+        mockMvc.perform(get("/api/users").header("Authorization", admin))
+                .andExpect(jsonPath("$.page.size").value(10));
+        mockMvc.perform(get("/api/users?size=5000").header("Authorization", admin))
+                .andExpect(jsonPath("$.page.size").value(100));
+    }
+
+    @Test
     void ordenarPorCampoNaoPermitidoDa400() throws Exception {
         mockMvc.perform(get("/api/users?sort=senha").header("Authorization", bearer(EMAIL_ADMIN)))
                 .andExpect(status().isBadRequest())

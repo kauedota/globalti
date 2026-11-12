@@ -5,12 +5,6 @@ spring:
     url: jdbc:postgresql://localhost:${DB_PORT:5432}/${DB_NAME:prova}
     username: ${DB_USER:prova}
     password: ${DB_PASSWORD}
-  data:
-    web:
-      pageable:
-        default-page-size: 10
-        # Limite para ninguém pedir uma página gigante de uma vez.
-        max-page-size: 100
   jpa:
     open-in-view: false
     hibernate:
