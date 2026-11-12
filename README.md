@@ -1,4 +1,4 @@
-# Prova Fullstack Java
+# Teste Fullstack Java
 
 API REST de usuários e endereços (Spring Boot + JPA + PostgreSQL) com autenticação JWT e consulta de CEP no
 ViaCEP, mais um frontend SPA em Angular que consome a API.

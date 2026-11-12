@@ -21,7 +21,7 @@ public class OpenApiConfig {
     public OpenAPI openApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Prova Fullstack Java - API")
+                        .title("Teste Fullstack Java - API")
                         .description("API de usuários e endereços com autenticação JWT e consulta de CEP (ViaCEP)")
                         .version("1.0.0"))
                 .components(new Components().addSecuritySchemes(ESQUEMA_JWT,

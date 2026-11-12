@@ -15,7 +15,7 @@ import { FooterComponent } from '../../shared/footer/footer.component';
     <div class="pagina">
       <header class="topo">
         <div class="topo-conteudo">
-          <a routerLink="/dashboard" class="marca" (click)="fecharMenu()">Prova Fullstack</a>
+          <a routerLink="/dashboard" class="marca" (click)="fecharMenu()">Teste Fullstack</a>
 
           <button type="button" class="menu-botao" aria-label="Abrir menu" [attr.aria-expanded]="menuAberto()"
                   (click)="alternarMenu()">

@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
   template: `
     <footer class="rodape">
       <div class="rodape-conteudo">
-        <span>&copy; {{ ano }} Prova Fullstack Java</span>
+        <span>&copy; {{ ano }} Teste Fullstack Java</span>
       </div>
     </footer>
   `,

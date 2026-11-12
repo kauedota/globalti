@@ -15,7 +15,7 @@
     <artifactId>prova</artifactId>
     <version>1.0.0</version>
     <name>prova</name>
-    <description>Prova Fullstack Java - API de usuários e endereços</description>
+    <description>Teste Fullstack Java - API de usuários e endereços</description>
 
     <properties>
         <java.version>21</java.version>
