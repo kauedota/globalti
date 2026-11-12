@@ -94,7 +94,21 @@ O USER vê só o próprio perfil e os próprios endereços. Avisos (como email j
 
 ## Como rodar
 
-### 1. Variáveis de ambiente
+### Opção rápida: tudo no Docker
+
+Só precisa do Docker. Sobe o banco, a API e o front:
+
+```bash
+cp .env.example .env     # edite DB_PASSWORD e JWT_SECRET
+docker compose up --build
+```
+
+Abra http://localhost:4200 (a API fica em http://localhost:8080). O nginx do front repassa `/api` para a API.
+Para parar: `docker compose down` (acrescente `-v` para apagar também os dados do banco).
+
+### Opção para desenvolvimento: API e front na máquina
+
+#### 1. Variáveis de ambiente
 
 ```bash
 cp .env.example .env
@@ -106,6 +120,7 @@ Edite o `.env` e troque `DB_PASSWORD` e `JWT_SECRET` (mínimo de 32 caracteres).
 |----------|----------------|--------|
 | `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Banco de dados | `prova`, `prova`, sem padrão |
 | `DB_PORT` | Porta do PostgreSQL na sua máquina | `5432` |
+| `DB_HOST` | Endereço do banco (o Docker já define como `db` para a API) | `localhost` |
 | `JWT_SECRET` | Segredo que assina o token (mín. 32 caracteres) | sem padrão: a API não sobe sem ele |
 | `JWT_EXPIRATION_MINUTES` | Validade do token | `120` |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Admin criado na primeira execução | veja abaixo |
@@ -113,15 +128,15 @@ Edite o `.env` e troque `DB_PASSWORD` e `JWT_SECRET` (mínimo de 32 caracteres).
 
 > Se a porta 5432 já estiver em uso (outro Postgres rodando), mude `DB_PORT` no `.env`, por exemplo para `5433`.
 
-### 2. Banco de dados
+#### 2. Banco de dados
 
 ```bash
-docker compose up -d
+docker compose up -d db
 ```
 
 As tabelas são criadas pelo Flyway quando a API sobe.
 
-### 3. API
+#### 3. API
 
 ```bash
 cd backend
@@ -134,7 +149,7 @@ definidas lá).
 - Swagger: http://localhost:8080/swagger-ui.html
 - Para testar rotas protegidas no Swagger: faça login em `POST /api/auth/login`, clique em **Authorize** e cole o token.
 
-### 4. Frontend
+#### 4. Frontend
 
 ```bash
 cd frontend
@@ -145,7 +160,7 @@ npm start
 Abra http://localhost:4200. Em desenvolvimento, o Angular repassa as chamadas `/api` para
 `http://localhost:8080` (arquivo `frontend/proxy.conf.json`), então a API precisa estar rodando.
 
-### 5. Testes
+#### 5. Testes
 
 ```bash
 cd backend
@@ -156,6 +171,8 @@ O Docker precisa estar aberto: os testes de repositório e de integração sobem
 Testcontainers. **O ViaCEP é mockado em todos os testes, nenhum chama a internet.**
 
 Para conferir o build do frontend: `cd frontend && npm run build`.
+
+O workflow `.github/workflows/ci.yml` roda o `mvn verify` e o build do Angular a cada push no GitHub.
 
 ## Usuário ADMIN de exemplo
 
@@ -218,6 +235,11 @@ token inválido ou login errado; `403` sem permissão; `404` não encontrado; `4
 - **CEP normalizado.** Aceito `01310-100` ou `01310100` e guardo sempre os 8 dígitos. O ViaCEP é consultado em todo
   cadastro/edição de endereço, então um CEP que não existe nunca entra no banco. Valores enviados pelo cliente têm
   prioridade sobre os do ViaCEP. Se o ViaCEP cair ou demorar (timeouts de 3 s e 5 s), a API responde 503, nunca 500.
+- **Nunca fica sem administrador.** Não é possível excluir nem rebaixar o último ADMIN (responde 409). Sem isso, um
+  clique errado deixaria o sistema sem ninguém para gerenciar os usuários.
+- **Freio no login.** Depois de 5 senhas erradas seguidas para o mesmo email, ele fica bloqueado por 15 minutos
+  (responde 429, mesmo com a senha certa). O controle fica na memória da API, o que basta para uma instância; com
+  várias instâncias, eu guardaria isso em um lugar compartilhado, como o Redis.
 - **Ordenação com lista fechada.** Só são aceitos os campos permitidos; qualquer outro devolve 400 (se passasse direto
   para o JPA, viraria um 500).
 - **ViaCEP mockado nos testes.** Os testes não dependem de internet nem do ViaCEP estar no ar. O cliente HTTP tem testes
