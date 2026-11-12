@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { aplicarErrosDoServidor } from '../../../core/form-utils';
 import { AuthService } from '../../../core/services/auth.service';
+import { FooterComponent } from '../../../shared/footer/footer.component';
 import { FieldErrorComponent } from '../../../shared/field-error/field-error.component';
 import { ToastService } from '../../../shared/toast/toast.service';
 
@@ -24,8 +25,9 @@ function senhasIguais(grupo: AbstractControl): ValidationErrors | null {
  */
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink, FieldErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, FieldErrorComponent, FooterComponent],
   template: `
+    <div class="pagina">
     <div class="auth-pagina">
       <form class="cartao auth-cartao" [formGroup]="form" (ngSubmit)="registrar()" novalidate>
         <h1>Criar conta</h1>
@@ -61,6 +63,8 @@ function senhasIguais(grupo: AbstractControl): ValidationErrors | null {
 
         <p class="auth-rodape">Já tem conta? <a routerLink="/login">Entrar</a></p>
       </form>
+    </div>
+    <app-footer />
     </div>
   `,
 })

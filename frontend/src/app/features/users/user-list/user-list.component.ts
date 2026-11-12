@@ -39,10 +39,10 @@ import { ToastService } from '../../../shared/toast/toast.service';
           <tbody>
             @for (usuario of usuarios(); track usuario.id) {
               <tr [class.linha-selecionada]="usuario.id === selecionadoId()" (click)="selecionar.emit(usuario)">
-                <td>{{ usuario.nome }}</td>
-                <td>{{ usuario.email }}</td>
-                <td><span class="selo" [class.selo-admin]="usuario.role === 'ADMIN'">{{ usuario.role }}</span></td>
-                <td>{{ usuario.criadoEm | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td data-label="Nome">{{ usuario.nome }}</td>
+                <td data-label="Email">{{ usuario.email }}</td>
+                <td data-label="Perfil"><span class="selo" [class.selo-admin]="usuario.role === 'ADMIN'">{{ usuario.role }}</span></td>
+                <td data-label="Criado em">{{ usuario.criadoEm | date: 'dd/MM/yyyy HH:mm' }}</td>
                 <td class="coluna-acoes" (click)="$event.stopPropagation()">
                   <a [routerLink]="['/usuarios', usuario.id, 'editar']" class="btn btn-secundario btn-pequeno">Editar</a>
                   <button type="button" class="btn btn-perigo btn-pequeno" (click)="excluir(usuario)">Excluir</button>

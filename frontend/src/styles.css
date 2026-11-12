@@ -44,6 +44,9 @@ a {
 /* ---------- Layout ---------- */
 
 .topo {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   background: var(--cor-superficie);
   border-bottom: 1px solid var(--cor-borda);
 }
@@ -66,10 +69,71 @@ a {
   color: var(--cor-texto);
 }
 
-.topo-usuario {
+/* Menu: em tela grande fica em linha; no celular vira o menu hambúrguer. */
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  margin-left: 28px;
+}
+
+.menu a:not(.btn) {
+  text-decoration: none;
+  color: var(--cor-texto-suave);
+  font-weight: 600;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.menu a:not(.btn):hover,
+.menu a.ativo {
+  color: var(--cor-primaria);
+  border-bottom-color: var(--cor-primaria);
+}
+
+.menu-usuario {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: auto;
+}
+
+.menu-botao {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: none;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.menu-botao span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--cor-texto);
+}
+
+/* ---------- Rodapé ---------- */
+
+.rodape {
+  background: var(--cor-superficie);
+  border-top: 1px solid var(--cor-borda);
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+}
+
+.rodape-conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px 20px;
+  flex-wrap: wrap;
 }
 
 .topo-nome {
@@ -77,6 +141,9 @@ a {
 }
 
 .conteudo {
+  flex: 1;
+  align-content: start;
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 24px 20px 48px;
@@ -129,8 +196,14 @@ a {
 
 /* ---------- Login e registro ---------- */
 
-.auth-pagina {
+.pagina {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-pagina {
+  flex: 1;
   display: grid;
   place-items: center;
   padding: 20px;
@@ -450,6 +523,7 @@ select.ng-invalid.ng-touched {
 
 .toast-sucesso { background: var(--cor-sucesso); }
 .toast-erro { background: var(--cor-perigo); }
+.toast-alerta { background: #e0a100; color: #2b2100; }
 .toast-info { background: var(--cor-primaria); }
 
 .toast-fechar {
@@ -498,7 +572,51 @@ select.ng-invalid.ng-touched {
 
 /* ---------- Telas pequenas ---------- */
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
+  .topo-conteudo {
+    position: relative;
+  }
+
+  .menu-botao {
+    display: flex;
+  }
+
+  /* No celular o menu abre como uma lista logo abaixo da barra. */
+  .menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 12px 20px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    background: var(--cor-superficie);
+    border-bottom: 1px solid var(--cor-borda);
+    box-shadow: var(--sombra);
+  }
+
+  .menu.menu-aberto {
+    display: flex;
+  }
+
+  .menu-usuario {
+    margin: 6px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--cor-borda);
+    flex-wrap: wrap;
+  }
+
+  .conteudo {
+    padding: 16px 12px 32px;
+  }
+
+  .cartao {
+    padding: 14px;
+  }
+
   .grade {
     grid-template-columns: 1fr;
   }
@@ -507,11 +625,72 @@ select.ng-invalid.ng-touched {
     grid-column: auto;
   }
 
-  .topo-conteudo {
-    justify-content: center;
-  }
-
   .formulario-acoes {
     flex-direction: column-reverse;
+  }
+
+  .formulario-acoes .btn {
+    width: 100%;
+  }
+
+  .rodape-conteudo {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .toast-area {
+    left: 12px;
+    right: 12px;
+    max-width: none;
+  }
+
+  /* Tabelas viram uma lista de cartões: cada linha mostra "Rótulo: valor". */
+  .tabela thead {
+    display: none;
+  }
+
+  .tabela,
+  .tabela tbody,
+  .tabela tr,
+  .tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabela tr {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .tabela td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    border: none;
+    white-space: normal;
+    text-align: right;
+  }
+
+  .tabela td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--cor-texto-suave);
+    text-align: left;
+  }
+
+  .tabela td.coluna-acoes {
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+
+  .tabela td.tabela-vazia {
+    display: block;
+  }
+
+  .paginacao,
+  .paginacao-controles {
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }

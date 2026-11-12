@@ -38,11 +38,11 @@ import { ToastService } from '../../../shared/toast/toast.service';
           <tbody>
             @for (endereco of enderecos(); track endereco.id) {
               <tr>
-                <td>{{ endereco.logradouro }}</td>
-                <td>{{ endereco.numero }}{{ endereco.complemento ? ' - ' + endereco.complemento : '' }}</td>
-                <td>{{ endereco.bairro }}</td>
-                <td>{{ endereco.cidade }}/{{ endereco.estado }}</td>
-                <td>{{ formatarCep(endereco.cep) }}</td>
+                <td data-label="Logradouro">{{ endereco.logradouro }}</td>
+                <td data-label="Número">{{ endereco.numero }}{{ endereco.complemento ? ' - ' + endereco.complemento : '' }}</td>
+                <td data-label="Bairro">{{ endereco.bairro }}</td>
+                <td data-label="Cidade/UF">{{ endereco.cidade }}/{{ endereco.estado }}</td>
+                <td data-label="CEP">{{ formatarCep(endereco.cep) }}</td>
                 <td class="coluna-acoes">
                   <a [routerLink]="['/enderecos', endereco.id, 'editar']" class="btn btn-secundario btn-pequeno">Editar</a>
                   <button type="button" class="btn btn-perigo btn-pequeno" (click)="excluir(endereco)">Excluir</button>

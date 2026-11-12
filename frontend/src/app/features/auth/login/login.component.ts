@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { FooterComponent } from '../../../shared/footer/footer.component';
 import { FieldErrorComponent } from '../../../shared/field-error/field-error.component';
 import { ToastService } from '../../../shared/toast/toast.service';
 
@@ -11,8 +12,9 @@ import { ToastService } from '../../../shared/toast/toast.service';
  */
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, FieldErrorComponent],
+  imports: [ReactiveFormsModule, RouterLink, FieldErrorComponent, FooterComponent],
   template: `
+    <div class="pagina">
     <div class="auth-pagina">
       <form class="cartao auth-cartao" [formGroup]="form" (ngSubmit)="entrar()" novalidate>
         <h1>Entrar</h1>
@@ -36,6 +38,8 @@ import { ToastService } from '../../../shared/toast/toast.service';
 
         <p class="auth-rodape">Ainda não tem conta? <a routerLink="/registro">Cadastre-se</a></p>
       </form>
+    </div>
+    <app-footer />
     </div>
   `,
 })

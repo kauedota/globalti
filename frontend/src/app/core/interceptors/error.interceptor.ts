@@ -23,8 +23,12 @@ export const errorInterceptor: HttpInterceptorFn = (requisicao, proximo) => {
         toast.erro('Não foi possível conectar ao servidor. Verifique se a API está no ar.');
       } else if (erro.status === 401 && !rotaDeLogin) {
         // Token vencido ou inválido: a sessão acabou.
-        toast.erro('Sua sessão expirou. Entre novamente.');
+        toast.alerta('Sua sessão expirou. Entre novamente.');
         auth.logout();
+      } else if (erro.status === 403 || erro.status === 409) {
+        // Não é falha do sistema: a pessoa só não pode fazer aquilo (ou já existe). Aviso em amarelo.
+        const corpo = erro.error as ApiError | null;
+        toast.alerta(corpo?.mensagem ?? 'Ação não permitida.');
       } else {
         const corpo = erro.error as ApiError | null;
         toast.erro(corpo?.mensagem ?? 'Ocorreu um erro inesperado. Tente novamente.');

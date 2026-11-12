@@ -17,7 +17,7 @@ export const adminGuard: CanActivateFn = () => {
   if (auth.admin()) {
     return true;
   }
-  toast.erro('Essa área é restrita a administradores.');
+  toast.alerta('Essa área é restrita a administradores.');
   return router.createUrlTree(['/dashboard']);
 };
 
@@ -34,6 +34,6 @@ export const proprioOuAdminGuard: CanActivateFn = (rota) => {
   if (auth.admin() || auth.usuario()?.id === id) {
     return true;
   }
-  toast.erro('Você só pode editar o seu próprio cadastro.');
+  toast.alerta('Você só pode editar o seu próprio cadastro.');
   return router.createUrlTree(['/dashboard']);
 };
