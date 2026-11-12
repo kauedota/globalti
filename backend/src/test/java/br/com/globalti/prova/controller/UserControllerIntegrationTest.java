@@ -213,6 +213,29 @@ class UserControllerIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
+    void oUltimoAdministradorNaoPodeSerExcluidoNemRebaixado() throws Exception {
+        User admin = userRepository.findByEmail(EMAIL_ADMIN).orElseThrow();
+        String token = bearer(EMAIL_ADMIN);
+
+        mockMvc.perform(delete("/api/users/" + admin.getId()).header("Authorization", token))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.mensagem").value(containsString("último administrador")));
+        mockMvc.perform(comJson(put("/api/users/" + admin.getId()).header("Authorization", token),
+                        Map.of("nome", "Administrador", "email", EMAIL_ADMIN, "role", "USER")))
+                .andExpect(status().isConflict());
+
+        assertThat(userRepository.findById(admin.getId()).orElseThrow().getRole()).isEqualTo(Role.ADMIN);
+    }
+
+    @Test
+    void adminPodeExcluirOutroAdministradorQuandoSobraPeloMenosUm() throws Exception {
+        User outro = criarUsuario("Outro Admin", "outro-admin@teste.com", Role.ADMIN);
+
+        mockMvc.perform(delete("/api/users/" + outro.getId()).header("Authorization", bearer(EMAIL_ADMIN)))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void usuarioComumNaoExcluiOutroUsuario() throws Exception {
         criarUsuario("Ana", "ana@teste.com", Role.USER);
         User bia = criarUsuario("Bia", "bia@teste.com", Role.USER);

@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.time.Clock;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,6 +57,12 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // Relógio injetável: nos testes eu troco por um relógio controlado.
+    @Bean
+    public Clock relogio() {
+        return Clock.systemUTC();
     }
 
     @Bean

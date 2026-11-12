@@ -6,7 +6,7 @@ spring:
     # Variáveis de ambiente de verdade continuam tendo prioridade.
     import: optional:file:../.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5432}/${DB_NAME:prova}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:prova}
     username: ${DB_USER:prova}
     password: ${DB_PASSWORD}
   jpa:
@@ -25,6 +25,10 @@ app:
     # Sem valor padrão de propósito: a API não sobe sem o segredo definido.
     secret: ${JWT_SECRET}
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+  login:
+    # Depois de N senhas erradas seguidas, o email fica bloqueado por alguns minutos.
+    max-attempts: 5
+    block-minutes: 15
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
   viacep:

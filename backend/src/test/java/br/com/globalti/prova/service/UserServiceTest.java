@@ -6,6 +6,7 @@ import br.com.globalti.prova.dto.request.RegisterRequest;
 import br.com.globalti.prova.dto.request.UserCreateRequest;
 import br.com.globalti.prova.dto.request.UserUpdateRequest;
 import br.com.globalti.prova.dto.response.UserResponse;
+import br.com.globalti.prova.exception.BusinessConflictException;
 import br.com.globalti.prova.exception.EmailAlreadyExistsException;
 import br.com.globalti.prova.exception.InvalidRequestException;
 import br.com.globalti.prova.exception.ResourceNotFoundException;
@@ -181,6 +182,37 @@ class UserServiceTest {
         userService.excluir(2L, admin);
 
         verify(userRepository).delete(existente);
+    }
+
+    @Test
+    void naoExcluiOUltimoAdministrador() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(usuario(1L, "admin@teste.com", Role.ADMIN)));
+        when(userRepository.countByRole(Role.ADMIN)).thenReturn(1L);
+
+        assertThatThrownBy(() -> userService.excluir(1L, admin)).isInstanceOf(BusinessConflictException.class);
+        verify(userRepository, never()).delete(any());
+    }
+
+    @Test
+    void excluiAdministradorQuandoExisteOutro() {
+        User outroAdmin = usuario(3L, "outro@teste.com", Role.ADMIN);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(outroAdmin));
+        when(userRepository.countByRole(Role.ADMIN)).thenReturn(2L);
+
+        userService.excluir(3L, admin);
+
+        verify(userRepository).delete(outroAdmin);
+    }
+
+    @Test
+    void naoRebaixaOUltimoAdministrador() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(usuario(1L, "admin@teste.com", Role.ADMIN)));
+        when(userRepository.countByRole(Role.ADMIN)).thenReturn(1L);
+
+        assertThatThrownBy(() -> userService.atualizar(1L,
+                new UserUpdateRequest("Admin", "admin@teste.com", null, Role.USER), admin))
+                .isInstanceOf(BusinessConflictException.class);
+        verify(userRepository, never()).save(any());
     }
 
     @Test

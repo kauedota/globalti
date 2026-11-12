@@ -25,8 +25,9 @@ export const errorInterceptor: HttpInterceptorFn = (requisicao, proximo) => {
         // Token vencido ou inválido: a sessão acabou.
         toast.alerta('Sua sessão expirou. Entre novamente.');
         auth.logout();
-      } else if (erro.status === 403 || erro.status === 409) {
-        // Não é falha do sistema: a pessoa só não pode fazer aquilo (ou já existe). Aviso em amarelo.
+      } else if (erro.status === 403 || erro.status === 409 || erro.status === 429) {
+        // Não é falha do sistema: a pessoa não pode fazer aquilo (sem permissão, conflito
+        // ou muitas tentativas de login). Aviso em amarelo.
         const corpo = erro.error as ApiError | null;
         toast.alerta(corpo?.mensagem ?? 'Ação não permitida.');
       } else {

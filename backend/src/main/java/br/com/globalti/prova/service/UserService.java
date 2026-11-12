@@ -6,6 +6,7 @@ import br.com.globalti.prova.dto.request.RegisterRequest;
 import br.com.globalti.prova.dto.request.UserCreateRequest;
 import br.com.globalti.prova.dto.request.UserUpdateRequest;
 import br.com.globalti.prova.dto.response.UserResponse;
+import br.com.globalti.prova.exception.BusinessConflictException;
 import br.com.globalti.prova.exception.EmailAlreadyExistsException;
 import br.com.globalti.prova.exception.ResourceNotFoundException;
 import br.com.globalti.prova.mapper.UserMapper;
@@ -95,6 +96,9 @@ public class UserService {
 
         // Só o ADMIN pode mudar o perfil. Se um USER mandar "role", eu ignoro.
         if (solicitante.isAdmin() && request.role() != null) {
+            if (user.getRole() == Role.ADMIN && request.role() != Role.ADMIN) {
+                garantirQueNaoEOUltimoAdmin(user, "rebaixar");
+            }
             user.setRole(request.role());
         }
 
@@ -105,7 +109,17 @@ public class UserService {
     @Transactional
     public void excluir(Long id, UserPrincipal solicitante) {
         garantirAcesso(id, solicitante);
-        userRepository.delete(buscarEntidade(id));
+        User user = buscarEntidade(id);
+        garantirQueNaoEOUltimoAdmin(user, "excluir");
+        userRepository.delete(user);
+    }
+
+    // Se o sistema ficasse sem administrador, ninguém mais conseguiria gerenciar os usuários.
+    // Por isso não deixo excluir nem rebaixar o último ADMIN.
+    private void garantirQueNaoEOUltimoAdmin(User user, String acao) {
+        if (user.getRole() == Role.ADMIN && userRepository.countByRole(Role.ADMIN) <= 1) {
+            throw new BusinessConflictException("Não é possível " + acao + " o último administrador do sistema");
+        }
     }
 
     private UserResponse salvarNovo(String nome, String email, String senhaPura, Role role) {

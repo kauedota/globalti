@@ -98,9 +98,15 @@ public class GlobalExceptionHandler {
         return montar(HttpStatus.METHOD_NOT_ALLOWED, "Método HTTP não suportado para este endereço", req);
     }
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ApiError> tratarEmailDuplicado(EmailAlreadyExistsException ex, HttpServletRequest req) {
+    // Cobre email duplicado e as outras regras de conflito (ex.: último administrador).
+    @ExceptionHandler(BusinessConflictException.class)
+    public ResponseEntity<ApiError> tratarConflito(BusinessConflictException ex, HttpServletRequest req) {
         return montar(HttpStatus.CONFLICT, ex.getMessage(), req);
+    }
+
+    @ExceptionHandler(TooManyAttemptsException.class)
+    public ResponseEntity<ApiError> tratarMuitasTentativas(TooManyAttemptsException ex, HttpServletRequest req) {
+        return montar(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage(), req);
     }
 
     // Rede de segurança: se duas requisições com o mesmo email chegarem juntas,

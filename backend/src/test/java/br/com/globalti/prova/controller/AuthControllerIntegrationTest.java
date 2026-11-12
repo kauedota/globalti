@@ -104,6 +104,21 @@ class AuthControllerIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
+    void depoisDeCincoSenhasErradasOEmailFicaBloqueadoCom429() throws Exception {
+        criarUsuario("Forte", "bloqueio@teste.com", Role.USER);
+
+        for (int i = 0; i < 5; i++) {
+            mockMvc.perform(comJson(post("/api/auth/login"), Map.of("email", "bloqueio@teste.com", "senha", "errada123")))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        // Mesmo com a senha certa, enquanto estiver bloqueado a resposta é 429.
+        mockMvc.perform(comJson(post("/api/auth/login"), Map.of("email", "bloqueio@teste.com", "senha", SENHA)))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(jsonPath("$.status").value(429));
+    }
+
+    @Test
     void rotaProtegidaSemTokenDa401EmJson() throws Exception {
         mockMvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized())
